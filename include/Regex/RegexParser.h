@@ -26,5 +26,5 @@ class RegexParser {
     bool isCurrentLiteral() const;
 
     std::string regex;
-    int idx = 0;
+    size_t idx = 0;
 };

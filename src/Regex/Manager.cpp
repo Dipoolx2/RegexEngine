@@ -7,7 +7,7 @@ void Manager::load(std::unique_ptr<Regex> regex) {
     this->loadedRegex = std::move(regex);
 }
 
-void Manager::load(const std::string regexStr) {
+void Manager::load(const std::string& regexStr) {
     std::unique_ptr<Regex> regex = this->parser->parse(regexStr);
     this->load(std::move(regex));
 }

@@ -14,7 +14,7 @@ class Manager {
     bool loaded() const;
 
     void load(std::unique_ptr<Regex> regex);
-    void load(const std::string regex);
+    void load(const std::string& regex);
 
     std::optional<std::string> extractRegexString() const;
 
