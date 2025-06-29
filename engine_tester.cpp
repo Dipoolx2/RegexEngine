@@ -5,18 +5,18 @@
 #include "RegexHelper.h"
 
 int main() {
-    std::unique_ptr<Regex> regex = makeRegex<Regex::Union>(
+    std::unique_ptr<Regex> regex = makeRegex<Regex::Alternation>(
         makeRegex<Regex::Concat>(
-            makeRegex<Regex::Lit>('a'),
-            makeRegex<Regex::Lit>('b')
+            makeRegex<Regex::Literal>('a'),
+            makeRegex<Regex::Literal>('b')
         ),
         makeRegex<Regex::Concat>(
-            makeRegex<Regex::Lit>('c'),
+            makeRegex<Regex::Literal>('c'),
             makeRegex<Regex::Repetition>(
                 makeRegex<Regex::Concat>(
-                    makeRegex<Regex::Lit>('d'),
+                    makeRegex<Regex::Literal>('d'),
                     makeRegex<Regex::Repetition>(
-                        makeRegex<Regex::Lit>('e')
+                        makeRegex<Regex::Literal>('e')
                     )
                 )
             )

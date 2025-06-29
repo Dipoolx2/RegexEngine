@@ -6,17 +6,24 @@
 
 class RegexVisitor;
 
+enum Precedence {
+    ALTERNATION = 1,
+    CONCAT = 2,
+    REPETITION = 3,
+    LITERAL = 4
+};
+
 class Regex {
     public:
         virtual ~Regex() = default;
-        
+
         virtual std::any accept(RegexVisitor& visitor) = 0;
-        virtual unsigned char precedence() = 0;
+        virtual unsigned char precedence() const = 0;
         
         class Concat;
-        class Union;
+        class Alternation;
         class Repetition;
-        class Lit;
+        class Literal;
 };
 
 class Regex::Concat final : public Regex {
@@ -24,21 +31,21 @@ class Regex::Concat final : public Regex {
         Concat(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right);
 
         std::any accept(RegexVisitor& visitor) override final;
-        unsigned char precedence() override final;
+        unsigned char precedence() const override final;
 
         std::unique_ptr<Regex> left;
         std::unique_ptr<Regex> right;
 };
 
-class Regex::Union final : public Regex {
+class Regex::Alternation final : public Regex {
     public:
-        Union(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right);
+        Alternation(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right);
 
         std::any accept(RegexVisitor& visitor) override final;
-        unsigned char precedence() override final;
+        unsigned char precedence() const override final;
 
-        const std::unique_ptr<Regex> left;
-        const std::unique_ptr<Regex> right;
+        std::unique_ptr<Regex> left;
+        std::unique_ptr<Regex> right;
 };
 
 class Regex::Repetition final : public Regex {
@@ -46,17 +53,17 @@ class Regex::Repetition final : public Regex {
         Repetition(std::unique_ptr<Regex> inner);
 
         std::any accept(RegexVisitor& visitor) override final;
-        unsigned char precedence() override final;
+        unsigned char precedence() const override final;
 
         std::unique_ptr<Regex> inner;
 };
 
-class Regex::Lit final : public Regex {
+class Regex::Literal final : public Regex {
     public:
-        Lit(const char c);
+        Literal(const char c);
 
         std::any accept(RegexVisitor& visitor) override final;
-        unsigned char precedence() override final;
+        unsigned char precedence() const override final;
  
         const char c;
 };

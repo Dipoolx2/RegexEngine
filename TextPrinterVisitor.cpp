@@ -13,10 +13,10 @@ std::any TextPrinterVisitor::visitConcat(Regex::Concat& concat) {
     return nullptr;
 }
 
-std::any TextPrinterVisitor::visitUnion(Regex::Union& union_) {
-    this->printAccordingTo(union_, *union_.left);
+std::any TextPrinterVisitor::visitAlternation(Regex::Alternation& alternation) {
+    this->printAccordingTo(alternation, *alternation.left);
     std::cout << "|";
-    this->printAccordingTo(union_, *union_.right);
+    this->printAccordingTo(alternation, *alternation.right);
 
     return nullptr;
 }
@@ -28,7 +28,7 @@ std::any TextPrinterVisitor::visitRepetition(Regex::Repetition& repetition) {
     return nullptr;
 }
 
-std::any TextPrinterVisitor::visitLiteral(Regex::Lit& literal) {
+std::any TextPrinterVisitor::visitLiteral(Regex::Literal& literal) {
     std::cout << literal.c;
 
     return nullptr;

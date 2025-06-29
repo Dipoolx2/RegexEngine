@@ -13,11 +13,11 @@ std::any TreePrinterVisitor::visitConcat(Regex::Concat& concat) {
     return nullptr;
 }
 
-std::any TreePrinterVisitor::visitUnion(Regex::Union& union_) {
+std::any TreePrinterVisitor::visitAlternation(Regex::Alternation& alternation) {
     std::cout << "(union ";
-    union_.left->accept(*this);
+    alternation.left->accept(*this);
     std::cout << " ";
-    union_.right->accept(*this);
+    alternation.right->accept(*this);
     std::cout << ")";
 
     return nullptr;
@@ -31,7 +31,7 @@ std::any TreePrinterVisitor::visitRepetition(Regex::Repetition& repetition) {
     return nullptr;
 }
 
-std::any TreePrinterVisitor::visitLiteral(Regex::Lit& literal) {
+std::any TreePrinterVisitor::visitLiteral(Regex::Literal& literal) {
     std::cout << literal.c;
 
     return nullptr;

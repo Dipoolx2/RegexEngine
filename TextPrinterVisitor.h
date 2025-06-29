@@ -7,10 +7,10 @@ class TextPrinterVisitor final : public RegexVisitor {
     public:
     void print(Regex& regex);
 
-    std::any visitConcat(Regex::Concat& concat_) override final;
-    std::any visitUnion(Regex::Union& union_) override final;
-    std::any visitRepetition(Regex::Repetition& repetition_) override final;
-    std::any visitLiteral(Regex::Lit& lit_) override final;
+    std::any visitConcat(Regex::Concat& concat) override final;
+    std::any visitAlternation(Regex::Alternation& alternation) override final;
+    std::any visitRepetition(Regex::Repetition& repetition) override final;
+    std::any visitLiteral(Regex::Literal& literal) override final;
 
     private:
     void acceptWithParentheses(Regex& regex);
