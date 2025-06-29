@@ -1,7 +1,7 @@
 #include <memory>
 
 #include "Regex.h"
-#include "PrinterVisitor.h"
+#include "TreePrinterVisitor.h"
 #include "RegexHelper.h"
 
 int main() {
@@ -15,8 +15,8 @@ int main() {
         )
     );
 
-    PrinterVisitor printer;
-    printer.print(*regex);
+    TreePrinterVisitor treePrinter;
+    treePrinter.print(*regex);
 
     return 0;
 }

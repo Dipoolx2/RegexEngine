@@ -1,9 +1,9 @@
 #include "RegexVisitor.h"
 
-#ifndef PRINTERVISITOR_H
-#define PRINTERVISITOR_H
+#ifndef TEXTPRINTERVISITOR_H
+#define TEXTPRINTERVISITOR_H
 
-class PrinterVisitor final : public RegexVisitor {
+class TextPrinterVisitor final : public RegexVisitor {
     public:
     void print(Regex& regex);
 
