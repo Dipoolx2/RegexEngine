@@ -1,7 +1,7 @@
 #include <memory>
 
 #include "Regex.h"
-#include "TreePrinterVisitor.h"
+#include "TextPrinterVisitor.h"
 #include "RegexHelper.h"
 
 int main() {
@@ -23,8 +23,8 @@ int main() {
         )
     );
 
-    TreePrinterVisitor treePrinter;
-    treePrinter.print(*regex);
+    TextPrinterVisitor textPrinter;
+    textPrinter.print(*regex);
 
     return 0;
 }

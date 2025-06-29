@@ -3,30 +3,27 @@
 
 #include "TextPrinterVisitor.h"
 
+// TODO: Add abstraction for const/pure visitors.
+//          ALTERNATIVELY: Instead of printing, do string gen.
+
 std::any TextPrinterVisitor::visitConcat(Regex::Concat& concat) {
-    std::cout << "(concat ";
-    concat.left->accept(*this);
-    std::cout << " ";
-    concat.right->accept(*this);
-    std::cout << ")";
+    this->printAccordingTo(concat, *concat.left);
+    this->printAccordingTo(concat, *concat.right);
 
     return nullptr;
 }
 
 std::any TextPrinterVisitor::visitUnion(Regex::Union& union_) {
-    std::cout << "(union ";
-    union_.left->accept(*this);
-    std::cout << " ";
-    union_.right->accept(*this);
-    std::cout << ")";
+    this->printAccordingTo(union_, *union_.left);
+    std::cout << "|";
+    this->printAccordingTo(union_, *union_.right);
 
     return nullptr;
 }
 
 std::any TextPrinterVisitor::visitRepetition(Regex::Repetition& repetition) {
-    std::cout << "(rep ";
-    repetition.inner->accept(*this);
-    std::cout << ")";
+    this->printAccordingTo(repetition, *repetition.inner);
+    std::cout << "*";
 
     return nullptr;
 }
@@ -35,6 +32,18 @@ std::any TextPrinterVisitor::visitLiteral(Regex::Lit& literal) {
     std::cout << literal.c;
 
     return nullptr;
+}
+
+void TextPrinterVisitor::printAccordingTo(Regex& parent, Regex& child) {
+    if (child.precedence() <= parent.precedence())
+        this->acceptWithParentheses(child);
+    else child.accept(*this);
+}
+
+void TextPrinterVisitor::acceptWithParentheses(Regex& regex) {
+    std::cout << "(";
+    regex.accept(*this);
+    std::cout << ")";
 }
 
 void TextPrinterVisitor::print(Regex& regex) {
