@@ -23,10 +23,20 @@ void attemptLoadRegex(const std::string& command, Manager& manager) {
         }
 
         manager.load(regex);
-        
+        std::cout << "Loaded `" << regex << "`.\n";
+
     } catch (const ParseException& e) {
         std::cout << e.what() << std::endl;
     }
+}
+
+void attemptPrintRegex(Manager& manager) {
+    if (!manager.loaded()) {
+        std::cout << "No regex loaded. Load one first with `load <regex>`.\n";
+        return;
+    }
+
+    std::cout << *std::move(manager.extractRegexString()) << std::endl;
 }
 
 void startRepl(Manager& manager) {
@@ -42,6 +52,8 @@ void startRepl(Manager& manager) {
             break;
         } else if (line.substr(0, 4) == "load") {
             attemptLoadRegex(line, manager);
+        } else if (line.substr(0, 4) == "show") {
+            attemptPrintRegex(manager);
         }
 
     }
