@@ -1,8 +1,9 @@
 #include <memory>
+#include <iostream>
 
-#include "Regex.h"
-#include "TextPrinterVisitor.h"
-#include "RegexHelper.h"
+#include <Regex/Regex.h>
+#include <Regex/RegexTextVisitor.h>
+#include <Regex/RegexHelper.h>
 
 int main() {
     std::unique_ptr<Regex> regex = makeRegex<Regex::Alternation>(
@@ -23,8 +24,8 @@ int main() {
         )
     );
 
-    TextPrinterVisitor textPrinter;
-    textPrinter.print(*regex);
+    RegexTextVisitor textVisitor;
+    std::cout << textVisitor.get(*regex) << std::endl;
 
     return 0;
 }

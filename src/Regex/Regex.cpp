@@ -1,5 +1,5 @@
-#include "Regex.h"
-#include "RegexVisitor.h"
+#include <Regex/Regex.h>
+#include <Regex/RegexVisitor.h>
 
 unsigned char Regex::Concat::precedence() const {
     return Precedence::CONCAT;

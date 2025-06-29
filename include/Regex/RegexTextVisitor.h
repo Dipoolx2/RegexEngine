@@ -1,11 +1,12 @@
 #include "RegexVisitor.h"
+#include <sstream>
 
-#ifndef TEXTPRINTERVISITOR_H
-#define TEXTPRINTERVISITOR_H
+#ifndef REGEXTEXTVISITOR_H
+#define REGEXTEXTVISITOR_H
 
-class TextPrinterVisitor final : public RegexVisitor {
+class RegexTextVisitor final : public RegexVisitor {
     public:
-    void print(Regex& regex);
+    [[nodiscard]] std::string get(Regex& regex);
 
     std::any visitConcat(Regex::Concat& concat) override final;
     std::any visitAlternation(Regex::Alternation& alternation) override final;
@@ -15,6 +16,8 @@ class TextPrinterVisitor final : public RegexVisitor {
     private:
     void acceptWithParentheses(Regex& regex);
     void printAccordingTo(Regex& parent, Regex& child);
+
+    std::stringstream ss;
 };
 
 #endif
