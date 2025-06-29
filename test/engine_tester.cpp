@@ -1,9 +1,9 @@
 #include <memory>
 #include <iostream>
 
-#include <Regex/Regex.h>
-#include <Regex/RegexTextVisitor.h>
-#include <Regex/RegexHelper.h>
+#include "Regex/Regex.h"
+#include "Regex/RegexTextVisitor.h"
+#include "Regex/RegexHelper.h"
 
 int main() {
     std::unique_ptr<Regex> regex = makeRegex<Regex::Alternation>(

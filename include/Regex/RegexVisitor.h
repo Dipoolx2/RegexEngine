@@ -1,8 +1,7 @@
 #include <any>
 #include "Regex.h"
 
-#ifndef REGEXVISITOR_H
-#define REGEXVISITOR_H
+#pragma once
 
 class RegexVisitor {
 
@@ -14,5 +13,3 @@ class RegexVisitor {
     
     virtual ~RegexVisitor() = default;
 };
-
-#endif

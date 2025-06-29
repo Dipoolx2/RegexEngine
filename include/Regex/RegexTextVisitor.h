@@ -1,8 +1,7 @@
 #include "RegexVisitor.h"
 #include <sstream>
 
-#ifndef REGEXTEXTVISITOR_H
-#define REGEXTEXTVISITOR_H
+#pragma once
 
 class RegexTextVisitor final : public RegexVisitor {
     public:
@@ -19,5 +18,3 @@ class RegexTextVisitor final : public RegexVisitor {
 
     std::stringstream ss;
 };
-
-#endif

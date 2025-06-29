@@ -1,8 +1,7 @@
 #include <memory>
 #include <any>
 
-#ifndef REGEX_H
-#define REGEX_H
+#pragma once
 
 class RegexVisitor;
 
@@ -67,5 +66,3 @@ class Regex::Literal final : public Regex {
  
         const char c;
 };
-
-#endif

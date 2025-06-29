@@ -1,6 +1,6 @@
 #include <any>
 
-#include <Regex/RegexTextVisitor.h>
+#include "Regex/RegexTextVisitor.h"
 
 std::any RegexTextVisitor::visitConcat(Regex::Concat& concat) {
     this->printAccordingTo(concat, *concat.left);
