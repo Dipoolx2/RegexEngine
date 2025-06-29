@@ -9,28 +9,23 @@
 // TODO: Switch names of this class and textprintervisitor (honest mistake).
 
 std::any TreePrinterVisitor::visitConcat(Regex::Concat& concat) {
-    std::cout << "(";
-    concat.left->accept(*this);
-    concat.right->accept(*this);
-    std::cout << ")";
+    this->printAccordingTo(concat, *concat.left);
+    this->printAccordingTo(concat, *concat.right);
 
     return nullptr;
 }
 
 std::any TreePrinterVisitor::visitUnion(Regex::Union& union_) {
-    std::cout << "(";
-    union_.left->accept(*this);
+    this->printAccordingTo(union_, *union_.left);
     std::cout << "|";
-    union_.right->accept(*this);
-    std::cout << "(";
+    this->printAccordingTo(union_, *union_.right);
 
     return nullptr;
 }
 
 std::any TreePrinterVisitor::visitRepetition(Regex::Repetition& repetition) {
-    std::cout << "(";
-    repetition.inner->accept(*this);
-    std::cout << ")*";
+    this->printAccordingTo(repetition, *repetition.inner);
+    std::cout << "*";
 
     return nullptr;
 }
@@ -39,6 +34,18 @@ std::any TreePrinterVisitor::visitLiteral(Regex::Lit& literal) {
     std::cout << literal.c;
 
     return nullptr;
+}
+
+void TreePrinterVisitor::printAccordingTo(Regex& parent, Regex& child) {
+    if (child.precedence() <= parent.precedence())
+        this->acceptWithParentheses(child);
+    else child.accept(*this);
+}
+
+void TreePrinterVisitor::acceptWithParentheses(Regex& regex) {
+    std::cout << "(";
+    regex.accept(*this);
+    std::cout << ")";
 }
 
 void TreePrinterVisitor::print(Regex& regex) {

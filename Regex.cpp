@@ -1,6 +1,22 @@
 #include "Regex.h"
 #include "RegexVisitor.h"
 
+unsigned char Regex::Concat::precedence() {
+    return 2;
+}
+
+unsigned char Regex::Union::precedence() {
+    return 1;
+}
+
+unsigned char Regex::Repetition::precedence() {
+    return 3;
+}
+
+unsigned char Regex::Lit::precedence() {
+    return 4;
+}
+
 std::any Regex::Concat::accept(RegexVisitor& visitor) {
     return visitor.visitConcat(*this);
 }

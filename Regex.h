@@ -9,7 +9,9 @@ class RegexVisitor;
 class Regex {
     public:
         virtual ~Regex() = default;
+        
         virtual std::any accept(RegexVisitor& visitor) = 0;
+        virtual unsigned char precedence() = 0;
         
         class Concat;
         class Union;
@@ -20,8 +22,10 @@ class Regex {
 class Regex::Concat final : public Regex {
     public:
         Concat(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right);
+
         std::any accept(RegexVisitor& visitor) override final;
-    
+        unsigned char precedence() override final;
+
         std::unique_ptr<Regex> left;
         std::unique_ptr<Regex> right;
 };
@@ -29,7 +33,9 @@ class Regex::Concat final : public Regex {
 class Regex::Union final : public Regex {
     public:
         Union(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right);
+
         std::any accept(RegexVisitor& visitor) override final;
+        unsigned char precedence() override final;
 
         const std::unique_ptr<Regex> left;
         const std::unique_ptr<Regex> right;
@@ -38,7 +44,9 @@ class Regex::Union final : public Regex {
 class Regex::Repetition final : public Regex {
     public:
         Repetition(std::unique_ptr<Regex> inner);
+
         std::any accept(RegexVisitor& visitor) override final;
+        unsigned char precedence() override final;
 
         std::unique_ptr<Regex> inner;
 };
@@ -46,7 +54,9 @@ class Regex::Repetition final : public Regex {
 class Regex::Lit final : public Regex {
     public:
         Lit(const char c);
+
         std::any accept(RegexVisitor& visitor) override final;
+        unsigned char precedence() override final;
  
         const char c;
 };
