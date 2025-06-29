@@ -26,5 +26,5 @@ Regex::Union::Union(std::unique_ptr<Regex> left, std::unique_ptr<Regex> right)
 Regex::Repetition::Repetition(std::unique_ptr<Regex> inner) 
     : inner(std::move(inner)) {}
 
-Regex::Lit::Lit(const char c)
+Regex::Lit::Lit(char c)
     : c(c) {}

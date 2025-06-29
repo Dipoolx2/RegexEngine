@@ -2,14 +2,21 @@
 
 #include "Regex.h"
 #include "PrinterVisitor.h"
+#include "RegexHelper.h"
 
 int main() {
-    auto lit1 = std::make_unique<Regex::Lit>('5');
-    auto lit2 = std::make_unique<Regex::Lit>('8');
-    auto concat1 = std::make_unique<Regex::Concat>(std::move(lit1), std::move(lit2));
-    
+    std::unique_ptr<Regex> regex = makeRegex<Regex::Concat>(
+        makeRegex<Regex::Union>(
+            makeRegex<Regex::Lit>('a'),
+            makeRegex<Regex::Lit>('b')
+        ),
+        makeRegex<Regex::Repetition>(
+            makeRegex<Regex::Lit>('c')
+        )
+    );
+
     PrinterVisitor printer;
-    printer.print(*concat1);
+    printer.print(*regex);
 
     return 0;
 }
