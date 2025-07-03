@@ -70,7 +70,7 @@ std::unique_ptr<Regex> RegexParser::grouping() {
 }
 
 bool RegexParser::isCurrentLiteral() const {
-    return current() >= 'a' && current() <= 'z';
+    return !(current() == '|' || current() == '*' || current() == '(' || current() == ')'); 
 }
 
 std::unique_ptr<Regex> RegexParser::literal() {
