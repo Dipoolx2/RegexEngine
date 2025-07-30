@@ -11,11 +11,15 @@
 class NFAState {
     public:
     virtual ~NFAState() = default;
+
     NFAState(bool accepting, 
                 std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>&& transitions);
-    
+    NFAState(bool accepting);
+
     bool isAccepting();
     std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>> transitions;
+
+    void definalize();
 
     private:
     bool accepting;

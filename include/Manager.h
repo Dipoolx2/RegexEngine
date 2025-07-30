@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "Regex.h"
-#include "RegexParser.h"
+#include "Regex/Regex.h"
+#include "Regex/RegexParser.h"
 
 #pragma once
 

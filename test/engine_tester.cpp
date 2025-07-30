@@ -1,8 +1,8 @@
 #include <cstddef>
 #include <iostream>
 
+#include "Manager.h"
 #include "Regex/ParseException.h"
-#include "Regex/Manager.h"
 
 const std::string exceptFirstWord(const std::string& line) {
     size_t pos = line.find(' ');
@@ -78,7 +78,7 @@ int main() {
     //     )
     // );
 
-    Manager manager;    
+    Manager manager;
     std::cout << "REPL session started. Type `exit` to quit.\n";
     startRepl(manager);
 

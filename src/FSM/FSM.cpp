@@ -114,3 +114,10 @@ std::string NFA::getVisualizationString() {
 NFAState::NFAState(bool accepting, 
                     std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>&& transitions) 
         : accepting(accepting), transitions(std::move(transitions)) {};
+
+NFAState::NFAState(bool acccepting) : accepting(accepting), 
+            transitions(std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>{}) {};
+
+void NFAState::definalize() {
+    this->accepting = false;
+}

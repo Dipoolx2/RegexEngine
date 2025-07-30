@@ -1,4 +1,4 @@
-#include "Regex/Manager.h"
+#include "Manager.h"
 #include "Regex/RegexTextVisitor.h"
 
 Manager::Manager() : parser(std::make_unique<RegexParser>()) {};
