@@ -43,7 +43,8 @@ std::string getCorrespondingName(int nr) {
         // Visit all neighbours.
         for (const auto& [transitionChar, neighbours] : current->transitions) {
             auto& stateCharTransition = stateTransitions[transitionChar];
-            alphabet.insert(transitionChar);
+            if (transitionChar != '$')
+                alphabet.insert(transitionChar);
             
             for (const auto& neighbour : neighbours) {
                 // Register name
@@ -115,7 +116,7 @@ NFAState::NFAState(bool accepting,
                     std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>&& transitions) 
         : accepting(accepting), transitions(std::move(transitions)) {};
 
-NFAState::NFAState(bool acccepting) : accepting(accepting), 
+NFAState::NFAState(bool accepting) : accepting(accepting), 
             transitions(std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>{}) {};
 
 void NFAState::definalize() {

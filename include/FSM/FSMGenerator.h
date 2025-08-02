@@ -1,6 +1,7 @@
-#include "../Regex/Regex.h"
-#include "FSM.h"
+#include "FSM/FSM.h"
+#include "Regex/Regex.h"
 
+#include <optional>
 #include <memory>
 
 #pragma once
@@ -8,10 +9,5 @@
 class FSMGenerator final {
     public:
     virtual ~FSMGenerator() = default;
-    FSMGenerator(std::shared_ptr<Regex> regex);
-
-    [[nodiscard]] std::shared_ptr<NFA> generateNFA() const;
-
-    private:
-    std::shared_ptr<Regex> regex;
+    [[nodiscard]] std::optional<std::unique_ptr<NFA>> generateNFA(Regex& regex) const;
 };

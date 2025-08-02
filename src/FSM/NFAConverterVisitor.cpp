@@ -1,63 +1,67 @@
 #include "FSM/NFAConverterVisitor.h"
 
+#include <iostream>
+
 void NFAConverterVisitor::createLambdaTransition(NFAStatePtr from, NFAStatePtr to) {
     from->transitions['$'].push_back(to);
 }
 
-NFAFragment* NFAConverterVisitor::acceptNFA(Regex* node) {
-    std::any result = node->accept(*this);
-    return cast<NFAFragment>(result);
+NFAFragment NFAConverterVisitor::acceptNFA(Regex& node) {
+    std::any result = node.accept(*this);
+    return std::any_cast<NFAFragment>(result);
 }
 
 std::any NFAConverterVisitor::visitConcat(Regex::Concat& concat) {
-    auto m0 = acceptNFA(concat.left.get());
-    auto m1 = acceptNFA(concat.right.get());
-    if (!m0 || !m1) return nullptr;
+    NFAFragment m0 = acceptNFA(*concat.left);
+    NFAFragment m1 = acceptNFA(*concat.right);
 
-    auto q0 = std::make_shared<NFAState>(false);
-    auto q1 = std::make_shared<NFAState>(true);
+    NFAStatePtr q0 = std::make_shared<NFAState>(false);
+    NFAStatePtr q1 = std::make_shared<NFAState>(true);
 
-    createLambdaTransition(q0, m0->first);
-    createLambdaTransition(m0->second, m1->first);
-    createLambdaTransition(m1->second, q1);
+    if (!q0 || !q1) {
+        std::cout << "q0 or q1 is nullptr" << std::endl;
+        return nullptr;
+    }
 
-    m0->second->definalize();
-    m1->second->definalize();
+    this->createLambdaTransition(q0, m0.first);
+    this->createLambdaTransition(m0.second, m1.first);
+    this->createLambdaTransition(m1.second, q1);
+
+    m0.second->definalize();
+    m1.second->definalize();
 
     return NFAFragment{q0, q1};
 }
 
 std::any NFAConverterVisitor::visitAlternation(Regex::Alternation& alt) {
-    auto m0 = acceptNFA(alt.left.get());
-    auto m1 = acceptNFA(alt.right.get());
-    if (!m0 || !m1) return nullptr;
+    auto m0 = acceptNFA(*alt.left);
+    auto m1 = acceptNFA(*alt.right);
 
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
-    createLambdaTransition(q0, m0->first);
-    createLambdaTransition(q0, m1->first);
-    createLambdaTransition(m0->second, q1);
-    createLambdaTransition(m1->second, q1);
+    createLambdaTransition(q0, m0.first);
+    createLambdaTransition(q0, m1.first);
+    createLambdaTransition(m0.second, q1);
+    createLambdaTransition(m1.second, q1);
 
-    m0->second->definalize();
-    m1->second->definalize();
+    m0.second->definalize();
+    m1.second->definalize();
 
     return NFAFragment{q0, q1};
 }
 
 std::any NFAConverterVisitor::visitRepetition(Regex::Repetition& rep) {
-    auto m = acceptNFA(rep.inner.get());
-    if (!m) return nullptr;
+    auto m = acceptNFA(*rep.inner);
 
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
-    createLambdaTransition(q0, m->first); // begin loop
+    createLambdaTransition(q0, m.first); // begin loop
     createLambdaTransition(q0, q1);       // accept empty string
-    createLambdaTransition(m->second, q0); // repeat
+    createLambdaTransition(m.second, q0); // repeat
 
-    m->second->definalize();
+    m.second->definalize();
 
     return NFAFragment{q0, q1};
 }
@@ -71,17 +75,16 @@ std::any NFAConverterVisitor::visitLiteral(Regex::Literal& lit) {
     return NFAFragment{q0, q1};
 }
 
-std::optional<NFA> NFAConverterVisitor::buildNFA(Regex& regex) {
-    auto m = acceptNFA(&regex);
-    if (!m) return std::nullopt;
-    
+std::optional<std::unique_ptr<NFA>> NFAConverterVisitor::buildNFA(Regex& regex) {
+    auto m = acceptNFA(regex);
+
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
-    this->createLambdaTransition(q0, m->first);
-    this->createLambdaTransition(m->second, q1);
+    this->createLambdaTransition(q0, m.first);
+    this->createLambdaTransition(m.second, q1);
 
-    m->second->definalize();
+    m.second->definalize();
 
-    return NFA(q0);
+    return std::make_unique<NFA>(q0);
 }

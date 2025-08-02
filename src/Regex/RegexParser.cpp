@@ -7,7 +7,7 @@
 // concat -> repetition | repetition concat
 // repetition -> grouping | grouping*
 // grouping -> literal | (regex)
-// literal -> [a-z]
+// literal -> ALPHANUM
 
 std::unique_ptr<Regex> RegexParser::parse(const std::string& regex) {
     this->regex = regex;

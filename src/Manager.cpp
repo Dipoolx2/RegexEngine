@@ -1,5 +1,8 @@
 #include "Manager.h"
+#include "FSM/FSMGenerator.h"
 #include "Regex/RegexTextVisitor.h"
+
+#include <iostream>
 
 Manager::Manager() : parser(std::make_unique<RegexParser>()) {};
 
@@ -12,8 +15,24 @@ void Manager::load(const std::string& regexStr) {
     this->load(std::move(regex));
 }
 
+void Manager::prepareNFA() {
+    if (!loaded()) return;
+
+    auto gen = FSMGenerator();
+    std::optional<std::unique_ptr<NFA>> generated = gen.generateNFA(*loadedRegex->get());
+
+    if (!generated.has_value()) return;
+
+    // Success
+    this->nfa = std::move(generated);
+}
+
 bool Manager::loaded() const {
-    return this->loadedRegex.get() != nullptr;
+    return this->loadedRegex.has_value();
+}
+
+bool Manager::loadedNFA() const {
+    return this->nfa.has_value();
 }
 
 std::optional<std::string> Manager::extractRegexString() const {
@@ -22,5 +41,11 @@ std::optional<std::string> Manager::extractRegexString() const {
     }
 
     RegexTextVisitor visitor;
-    return visitor.get(*(this->loadedRegex));
+    return visitor.get(*(this->loadedRegex->get()));
+}
+
+std::optional<std::string> Manager::extractNFAString() const {
+    if (!loadedNFA()) return std::nullopt;
+
+    return (*nfa)->getVisualizationString();
 }
