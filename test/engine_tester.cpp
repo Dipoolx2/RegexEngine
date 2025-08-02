@@ -62,8 +62,8 @@ void attemptPrintRegex(Manager& manager) {
     std::cout << *std::move(manager.extractRegexString()) << std::endl;
 }
 
-void startRepl(Manager& manager) {
 
+void startRepl(Manager& manager) {
     for (;;) {
         std::string line;
 
@@ -92,31 +92,9 @@ void startRepl(Manager& manager) {
 }
 
 int main() {
-    // std::unique_ptr<Regex> regex = makeRegex<Regex::Alternation>(
-    //     makeRegex<Regex::Concat>(
-    //         makeRegex<Regex::Literal>('a'),
-    //         makeRegex<Regex::Literal>('b')
-    //     ),
-    //     makeRegex<Regex::Concat>(
-    //         makeRegex<Regex::Literal>('c'),
-    //         makeRegex<Regex::Repetition>(
-    //             makeRegex<Regex::Concat>(
-    //                 makeRegex<Regex::Literal>('d'),
-    //                 makeRegex<Regex::Repetition>(
-    //                     makeRegex<Regex::Literal>('e')
-    //                 )
-    //             )
-    //         )
-    //     )
-    // );
-
     Manager manager;
     std::cout << "REPL session started. Type `exit` to quit.\n";
     startRepl(manager);
-
-
-    // RegexTextVisitor textVisitor;
-    // std::cout << textVisitor.get(*regex) << std::endl;
 
     return 0;
 }

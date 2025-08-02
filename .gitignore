@@ -40,6 +40,9 @@
 # debug information files
 *.dwo
 
+# Project-specific
+engine_tester
+
 # Makefile
 Makefile
 CMakeLists.txt

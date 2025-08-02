@@ -29,6 +29,7 @@ literal -> ALPHANUM
 
 **Future improvements**
 - Improved parsing for literals
+- Improved REPL backend
 
 # Acknowledgements
 - Formal theory by the `Languages and Automata` course: *Dr J.C. Rot* (Radboud University).
