@@ -4,6 +4,7 @@ _This project is currently WIP_
 
 **Current features**
 - Interactive REPL sessions: Load, show regexes and NFA's.
+- Regex to NFA-λ conversion (Thompson's reconstruction algorithm)
 - NFA explorer (BFS)
 - A recursive descent regex parser for the following grammar (in BNF):
   - Trivial syntax error reporting.
@@ -15,7 +16,6 @@ repetition -> grouping | grouping*
 grouping -> literal | "(" regex ")"
 literal -> ALPHANUM
 ```
-- Regex to NFA-λ conversion (Thompson's reconstruction algorithm)
 
 **Future features**
 - NFA minimization
