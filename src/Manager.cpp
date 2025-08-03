@@ -2,8 +2,6 @@
 #include "FSM/FSMGenerator.h"
 #include "Regex/RegexTextVisitor.h"
 
-#include <iostream>
-
 Manager::Manager() : parser(std::make_unique<RegexParser>()) {};
 
 void Manager::load(std::unique_ptr<Regex> regex) {
@@ -20,6 +18,10 @@ void Manager::prepareNFA() {
 
     auto gen = FSMGenerator();
     std::optional<std::unique_ptr<NFA>> generated = gen.generateNFA(*loadedRegex->get());
+
+    if (!generated.has_value()) return;
+
+    gen.removeLambda(**generated);
 
     if (!generated.has_value()) return;
 

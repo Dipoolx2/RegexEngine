@@ -122,3 +122,11 @@ NFAState::NFAState(bool accepting) : accepting(accepting),
 void NFAState::definalize() {
     this->accepting = false;
 }
+
+void NFAState::finalize() {
+    this->accepting = true;
+}
+
+void NFAState::clearLambdaTransitions() {
+    this->transitions.erase('$');
+}

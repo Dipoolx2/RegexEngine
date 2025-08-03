@@ -6,8 +6,11 @@
 
 #pragma once
 
+using NFAPtr = std::unique_ptr<NFA>;
+
 class FSMGenerator final {
     public:
     virtual ~FSMGenerator() = default;
-    [[nodiscard]] std::optional<std::unique_ptr<NFA>> generateNFA(Regex& regex) const;
+    [[nodiscard]] std::optional<NFAPtr> generateNFA(Regex& regex) const;
+    void removeLambda(NFA& nfa) const;
 };

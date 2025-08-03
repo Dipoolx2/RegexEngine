@@ -20,6 +20,8 @@ class NFAState {
     std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>> transitions;
 
     void definalize();
+    void finalize();
+    void clearLambdaTransitions();
 
     private:
     bool accepting;
