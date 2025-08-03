@@ -18,7 +18,7 @@ void LambdaRemover::removeLambdaTransitions(NFA& nfa) const {
         q.pop();
         if (visited.count(current) > 0) continue;
         visited.insert(current);
-        dynamicallyFindEClosures(current, q, visited, lambdaClosures);
+        dynamicallyFindLambdaClosures(current, q, visited, lambdaClosures);
     }
     
     for (auto& state : visited) {
@@ -26,7 +26,7 @@ void LambdaRemover::removeLambdaTransitions(NFA& nfa) const {
     }
 }
 
-void LambdaRemover::dynamicallyFindEClosures(
+void LambdaRemover::dynamicallyFindLambdaClosures(
     StatePtr state, 
     std::queue<StatePtr>& q, 
     StatePtrSet& visited, 
@@ -48,7 +48,7 @@ void LambdaRemover::dynamicallyFindEClosures(
 
         for (const auto& neighbour : neighbours) {
             if (lambdaClosures.count(neighbour) == 0) {
-                dynamicallyFindEClosures(neighbour, q, visited, lambdaClosures);
+                dynamicallyFindLambdaClosures(neighbour, q, visited, lambdaClosures);
             }
 
             for (const auto& closureState : lambdaClosures[neighbour]) {
