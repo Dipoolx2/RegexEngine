@@ -1,9 +1,15 @@
 #include "FSM/NFAConverterVisitor.h"
+#include "FSM/FSM.h"
 
 #include <iostream>
 
 void NFAConverterVisitor::createLambdaTransition(NFAStatePtr from, NFAStatePtr to) {
     from->transitions['$'].push_back(to);
+}
+
+void NFAConverterVisitor::registerStates(const NFAStatePtr st1, const NFAStatePtr st2) {
+    this->states.insert(st1);
+    this->states.insert(st2);
 }
 
 NFAFragment NFAConverterVisitor::acceptNFA(Regex& node) {
@@ -17,6 +23,8 @@ std::any NFAConverterVisitor::visitConcat(Regex::Concat& concat) {
 
     NFAStatePtr q0 = std::make_shared<NFAState>(false);
     NFAStatePtr q1 = std::make_shared<NFAState>(true);
+
+    registerStates(q0, q1);
 
     if (!q0 || !q1) {
         std::cout << "q0 or q1 is nullptr" << std::endl;
@@ -40,6 +48,8 @@ std::any NFAConverterVisitor::visitAlternation(Regex::Alternation& alt) {
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
+    registerStates(q0, q1);
+
     createLambdaTransition(q0, m0.first);
     createLambdaTransition(q0, m1.first);
     createLambdaTransition(m0.second, q1);
@@ -57,7 +67,9 @@ std::any NFAConverterVisitor::visitRepetition(Regex::Repetition& rep) {
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
-    createLambdaTransition(q0, m.first); // begin loop
+    registerStates(q0, q1);
+
+    createLambdaTransition(q0, m.first);  // begin loop
     createLambdaTransition(q0, q1);       // accept empty string
     createLambdaTransition(m.second, q0); // repeat
 
@@ -69,6 +81,8 @@ std::any NFAConverterVisitor::visitRepetition(Regex::Repetition& rep) {
 std::any NFAConverterVisitor::visitLiteral(Regex::Literal& lit) {
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
+
+    registerStates(q0, q1);
 
     q0->transitions[lit.c].push_back(q1);
     alphabet.insert(lit.c);
@@ -82,10 +96,12 @@ std::optional<std::unique_ptr<NFA>> NFAConverterVisitor::buildNFA(Regex& regex) 
     auto q0 = std::make_shared<NFAState>(false);
     auto q1 = std::make_shared<NFAState>(true);
 
+    registerStates(q0, q1);
+
     this->createLambdaTransition(q0, m.first);
     this->createLambdaTransition(m.second, q1);
 
     m.second->definalize();
 
-    return std::make_unique<NFA>(q0, std::move(alphabet));
+    return std::make_unique<NFA>(q0, std::move(states), std::move(alphabet));
 }

@@ -1,11 +1,9 @@
 #include "FSM/LambdaRemover.h"
+#include <memory>
 #include <queue>
-#include <unordered_set>
 #include <unordered_map>
 
-using StatePtr = std::shared_ptr<NFAState>;
-using StatePtrSet = std::unordered_set<StatePtr>;
-
+// Keeps the leftover states in the NFA's states field.
 void LambdaRemover::removeLambdaTransitions(NFA& nfa) const {
     std::unordered_map<StatePtr, StatePtrSet> lambdaClosures;
     StatePtrSet visited;
@@ -38,16 +36,18 @@ void LambdaRemover::dynamicallyFindLambdaClosures(
 
     for (const auto& [c, neighbours] : state->transitions) {
         if (c != '$') {
-            for (const auto& neighbour : neighbours) {
-                if (!visited.count(neighbour)) {
+            for (const auto& wNeighbour : neighbours) {
+                auto neighbour = wNeighbour.lock();
+                if (neighbour && !visited.count(neighbour)) {
                     q.push(neighbour);
                 }
             }
             continue;
         }
 
-        for (const auto& neighbour : neighbours) {
-            if (lambdaClosures.count(neighbour) == 0) {
+        for (const auto& wNeighbour : neighbours) {
+            auto neighbour = wNeighbour.lock();
+            if (neighbour && lambdaClosures.count(neighbour) == 0) {
                 dynamicallyFindLambdaClosures(neighbour, q, visited, lambdaClosures);
             }
 
@@ -67,8 +67,9 @@ void LambdaRemover::transitionsToClosureUnion(StatePtr state, StatePtrSet& closu
         for (const auto& [c, neighbours] : closureState->transitions) {
             if (c == '$') continue;
 
-            for (const auto& neighbour : neighbours) {
-                newTransitions[c].insert(neighbour);
+            for (const auto& wNeighbour : neighbours) {
+                if (auto neighbour = wNeighbour.lock())
+                    newTransitions[c].insert(neighbour);
             }
         }
 
@@ -79,6 +80,6 @@ void LambdaRemover::transitionsToClosureUnion(StatePtr state, StatePtrSet& closu
 
     state->transitions.clear();
     for (const auto& [c, targetsSet] : newTransitions) {
-        state->transitions[c] = std::vector<StatePtr>(targetsSet.begin(), targetsSet.end());
+        state->transitions[c] = std::vector<std::weak_ptr<NFAState>>(targetsSet.begin(), targetsSet.end());
     }
 }

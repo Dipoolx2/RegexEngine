@@ -24,8 +24,10 @@ public:
 
 private:
     void createLambdaTransition(NFAStatePtr from, NFAStatePtr to);
+    void registerStates(const NFAStatePtr st1, const NFAStatePtr st2);
 
     [[nodiscard]] NFAFragment acceptNFA(Regex& node);
 
     std::unordered_set<char> alphabet;
+    std::unordered_set<NFAStatePtr> states;
 };

@@ -1,6 +1,6 @@
+#include <memory>
 #include <unordered_set>
 #include <vector>
-#include <memory>
 #include <unordered_map>
 #include <string>
 
@@ -11,11 +11,11 @@ class NFAState {
     virtual ~NFAState() = default;
 
     NFAState(bool accepting, 
-                std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>&& transitions);
+                std::unordered_map<char, std::vector<std::weak_ptr<NFAState>>>&& transitions);
     NFAState(bool accepting);
 
     bool isAccepting();
-    std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>> transitions;
+    std::unordered_map<char, std::vector<std::weak_ptr<NFAState>>> transitions;
 
     void definalize();
     void finalize();
@@ -37,8 +37,11 @@ class NFA {
     public:
     std::shared_ptr<NFAState> start;
     std::unordered_set<char> alphabet;
+    std::unordered_set<std::shared_ptr<NFAState>> states;
 
-    NFA(std::shared_ptr<NFAState> start, std::unordered_set<char>&& alphabet);
+    NFA(std::shared_ptr<NFAState> start, 
+        std::unordered_set<std::shared_ptr<NFAState>>&& states, 
+        std::unordered_set<char>&& alphabet);
 
     std::string getVisualizationString();
     [[nodiscard]] ReadableFSA generateReadableNFA() const;

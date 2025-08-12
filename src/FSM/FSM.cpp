@@ -5,7 +5,10 @@ bool NFAState::isAccepting() {
     return this->accepting;
 };
 
-NFA::NFA(std::shared_ptr<NFAState> start, std::unordered_set<char>&& alphabet) : start(start), alphabet(alphabet) {}
+NFA::NFA(std::shared_ptr<NFAState> start, 
+            std::unordered_set<std::shared_ptr<NFAState>>&& states, 
+            std::unordered_set<char>&& alphabet) 
+        : start(start), states(states), alphabet(alphabet) {}
 
 std::string getCorrespondingName(int nr) {
     return "q" + std::to_string(nr);
@@ -58,10 +61,12 @@ std::string getCorrespondingName(int nr) {
                 // Mark accepting and visited
                 auto [it2, unvisited] = visited.emplace(neighbour);
                 if (!unvisited) continue;
-
-                if (neighbour->isAccepting()) 
+                
+                auto lockedNeighbour = neighbour.lock();
+                if (!lockedNeighbour) continue;
+                if (lockedNeighbour->isAccepting()) 
                     acceptingStates.insert(neighbourName);
-                q.push(neighbour);
+                q.push(lockedNeighbour);
             }
         }
     }
@@ -113,11 +118,11 @@ std::string NFA::getVisualizationString() {
 }
 
 NFAState::NFAState(bool accepting, 
-                    std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>&& transitions) 
+                    std::unordered_map<char, std::vector<std::weak_ptr<NFAState>>>&& transitions) 
         : accepting(accepting), transitions(std::move(transitions)) {};
 
 NFAState::NFAState(bool accepting) : accepting(accepting), 
-            transitions(std::unordered_map<char, std::vector<std::shared_ptr<NFAState>>>{}) {};
+            transitions(std::unordered_map<char, std::vector<std::weak_ptr<NFAState>>>{}) {};
 
 void NFAState::definalize() {
     this->accepting = false;
