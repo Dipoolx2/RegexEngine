@@ -71,6 +71,7 @@ std::any NFAConverterVisitor::visitLiteral(Regex::Literal& lit) {
     auto q1 = std::make_shared<NFAState>(true);
 
     q0->transitions[lit.c].push_back(q1);
+    alphabet.insert(lit.c);
 
     return NFAFragment{q0, q1};
 }
@@ -86,5 +87,5 @@ std::optional<std::unique_ptr<NFA>> NFAConverterVisitor::buildNFA(Regex& regex) 
 
     m.second->definalize();
 
-    return std::make_unique<NFA>(q0);
+    return std::make_unique<NFA>(q0, std::move(alphabet));
 }

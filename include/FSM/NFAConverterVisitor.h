@@ -2,6 +2,7 @@
 
 #include <any>
 #include <memory>
+#include <unordered_set>
 #include <utility>
 #include <optional>
 
@@ -25,4 +26,6 @@ private:
     void createLambdaTransition(NFAStatePtr from, NFAStatePtr to);
 
     [[nodiscard]] NFAFragment acceptNFA(Regex& node);
+
+    std::unordered_set<char> alphabet;
 };

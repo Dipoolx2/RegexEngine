@@ -18,11 +18,12 @@ void Manager::prepareNFA() {
 
     auto gen = FSMGenerator();
     std::optional<std::unique_ptr<NFA>> generated = gen.generateNFA(*loadedRegex->get());
-
+    if (!generated.has_value()) return;
+    
+    gen.removeLambda(**generated);
     if (!generated.has_value()) return;
 
-    gen.removeLambda(**generated);
-
+    gen.determinize(**generated);
     if (!generated.has_value()) return;
 
     // Success

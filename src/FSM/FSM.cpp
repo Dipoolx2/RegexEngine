@@ -5,7 +5,7 @@ bool NFAState::isAccepting() {
     return this->accepting;
 };
 
-NFA::NFA(std::shared_ptr<NFAState> start) : start(start) {}
+NFA::NFA(std::shared_ptr<NFAState> start, std::unordered_set<char>&& alphabet) : start(start), alphabet(alphabet) {}
 
 std::string getCorrespondingName(int nr) {
     return "q" + std::to_string(nr);

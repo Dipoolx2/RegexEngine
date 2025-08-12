@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <string>
 
-#define ALPHABET_SIZE 26
-
 #pragma once
 
 class NFAState {
@@ -38,8 +36,12 @@ struct ReadableFSA {
 class NFA {
     public:
     std::shared_ptr<NFAState> start;
-    NFA(std::shared_ptr<NFAState> start);
+    std::unordered_set<char> alphabet;
+
+    NFA(std::shared_ptr<NFAState> start, std::unordered_set<char>&& alphabet);
 
     std::string getVisualizationString();
     [[nodiscard]] ReadableFSA generateReadableNFA() const;
+
+    virtual ~NFA() = default;
 };

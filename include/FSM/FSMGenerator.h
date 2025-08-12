@@ -13,4 +13,5 @@ class FSMGenerator final {
     virtual ~FSMGenerator() = default;
     [[nodiscard]] std::optional<NFAPtr> generateNFA(Regex& regex) const;
     void removeLambda(NFA& nfa) const;
+    void determinize(NFA& nfa) const;
 };
